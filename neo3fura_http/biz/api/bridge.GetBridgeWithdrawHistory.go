@@ -37,12 +37,12 @@ func (me *T) GetBridgeDepositHistory(args struct {
 	if args.Sender.Valid() == true {
 		filter = bson.M{
 			"contract": args.ContractHash.Val(),
-			"$or":      []interface{}{bson.M{"eventname": "GasDeposit", "state.value.3.value": encoded}, bson.M{"eventname": "TokenDeposit", "state.value.5.value": encoded}},
+			"$or":      []interface{}{bson.M{"eventname": "GasDeposit", "state.value.3.value": encoded}, bson.M{"eventname": "NativeDeposit", "state.value.3.value": encoded}, bson.M{"eventname": "TokenDeposit", "state.value.5.value": encoded}},
 		}
 	} else {
 		filter = bson.M{
 			"contract": args.ContractHash.Val(),
-			"$or":      []interface{}{bson.M{"eventname": "GasDeposit"}, bson.M{"eventname": "TokenDeposit"}},
+			"$or":      []interface{}{bson.M{"eventname": "NativeDeposit"}, bson.M{"eventname": "GasDeposit"}, bson.M{"eventname": "TokenDeposit"}},
 		}
 	}
 
@@ -67,7 +67,7 @@ func (me *T) GetBridgeDepositHistory(args struct {
 	//get status of target chain
 	for _, item := range r1 {
 		eventname := item["eventname"].(string)
-		if eventname == "GasDeposit" {
+		if eventname == "GasDeposit" || eventname == "NativeDeposit" {
 			value := item["state"].(map[string]interface{})["value"].(primitive.A)
 			nonce := value[0].(map[string]interface{})["value"]
 			to := value[1].(map[string]interface{})["value"].(string)
