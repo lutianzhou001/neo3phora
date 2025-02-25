@@ -28,7 +28,7 @@ func (me *T) GetBridgeTxByNonce(args struct {
 	}
 
 	filter = bson.M{"contract": args.ContractHash.Val(),
-		"$or":                 []interface{}{bson.M{"eventname": "GasWithdrawal"}, bson.M{"eventname": "NativeClaimable"}},
+		"$or":                 []interface{}{bson.M{"eventname": "GasWithdrawal"}, bson.M{"eventname": "NativeWithdrawal"}, bson.M{"eventname": "GasClaimable"}, bson.M{"eventname": "NativeClaimable"}},
 		"state.value.0.value": nonceStr,
 	}
 
